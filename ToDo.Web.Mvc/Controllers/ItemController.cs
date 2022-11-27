@@ -37,5 +37,33 @@ namespace ToDo.Web.Mvc.Controllers
 
             return View(createItemModel);
         }
+
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var item = new Item();
+            item.SetID(id);
+            await repository.DeleteAsync(item);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Edit(Guid id, bool done, string description)
+        {
+            var item = new Item();
+            item.SetID(id);
+            item.SetDescription(description);
+            item.SetDone(done);
+            ViewBag.Item = item;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([Bind("Id", "Done")] CreateItemModel createItemModel)
+        {
+            var item = new Item();
+            item.SetID(createItemModel.Id);
+            item.SetDone(createItemModel.Done);
+            await repository.EditAsync(item);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

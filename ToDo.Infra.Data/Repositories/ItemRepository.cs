@@ -18,7 +18,7 @@ namespace ToDo.Infra.Data.Repositories
         public async Task<IEnumerable<Item>> GetAllAsync()
         {
             IEnumerable<Item> result;
-            var query = "select * from Items";
+            var query = "select * from ToDoDb..Items";
             using (var con = new SqlConnection(connectionString))
             {   
                 try
@@ -41,7 +41,7 @@ namespace ToDo.Infra.Data.Repositories
 
         public async Task AddAsync(Item item)
         {
-            var query = "insert into Items(Id, Description, Done, CreatedAt) values(@Id, @Description, @Done, @CreatedAt)";
+            var query = "insert into ToDoDb..Items(Id, Description, Done, CreatedAt) values(@Id, @Description, @Done, @CreatedAt)";
             using (var con = new SqlConnection(connectionString))
             {    
                 try
@@ -63,13 +63,34 @@ namespace ToDo.Infra.Data.Repositories
         public async Task EditAsync(Item item)
         {
             var count = 0;
-            var query = "update Items set Description = @Description, Done = @Done where id = @Id";
+            var query = "update ToDoDb..Items set Done = @Done where id = @Id";
             using (var con = new SqlConnection(connectionString))
             {
                 try
                 {
                     con.Open();
                     count = await con.ExecuteAsync(query, item);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    con.Close();
+                }
+            };
+        }
+
+        public async Task DeleteAsync(Item item)
+        {
+            var query = "delete from ToDoDb..Items where id = @Id";
+            using (var con = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    con.Open();
+                    await con.ExecuteAsync(query, item);
                 }
                 catch (Exception)
                 {

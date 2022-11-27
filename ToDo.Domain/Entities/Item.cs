@@ -8,7 +8,7 @@ namespace ToDo.Domain.Entities
         /// <summary>
         /// Put it after
         /// </summary>
-        private Item()
+        public Item()
         {
 
         }
@@ -34,6 +34,19 @@ namespace ToDo.Domain.Entities
         public void MarkAsDone() => Done = true;
         public void MarkAsUndone() => Done = true;
 
+        public void SetID(Guid id)
+        {
+            Id = id;
+        }
 
+        public void SetDescription(string description)
+        {
+            Description = description;
+        }
+
+        public void SetDone(bool done)
+        {
+            Done = done;
+        }
     }
 }
